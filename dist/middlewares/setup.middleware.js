@@ -22,6 +22,7 @@ var _config = require("../config");
 var allowedDomains = [_config.FRONTEND_URL];
 var corsOptions = {
   origin: function origin(_origin, callbak) {
+    console.log(_origin);
     if (allowedDomains.includes(_origin)) return callbak(null, true);else return callbak(new Error("".concat(_origin, " has been blocked by CORS")));
   }
 };

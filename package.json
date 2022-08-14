@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon ./src/server.js --exec babel-node",
     "build": "rimraf ./dist && babel ./src -d ./dist",
-    "start": "node ./dist/server.js",
+    "start": "node dist/server.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --verbose --detectOpenHandles --silent ./tests/*.spec.js",
     "test-watch": "npm run test -- --watch",
     "test-mocha": "mocha --require @babel/register ./tests/*.test.js",
