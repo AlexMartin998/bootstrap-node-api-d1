@@ -1,7 +1,19 @@
 'use strict';
 
-export const addA = (a, b) => a + b;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = exports.addA = void 0;
 
-const addB = (a, b) => a + b;
+var addA = function addA(a, b) {
+  return a + b;
+};
 
-export default addB;
+exports.addA = addA;
+
+var addB = function addB(a, b) {
+  return a + b;
+};
+
+var _default = addB;
+exports["default"] = _default;

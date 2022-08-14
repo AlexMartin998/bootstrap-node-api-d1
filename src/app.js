@@ -1,23 +1,29 @@
 'use strict';
 
-import express from 'express';
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-import './db/db';
-import { notFoundMiddleware, setupMiddlewares } from './middlewares';
-import { authRoutes, projectsRoutes, tasksRoutes, usersRoutes } from './routes';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _express = _interopRequireDefault(require("express"));
+
+require("./db/db");
+
+var _middlewares = require("./middlewares");
+
+var _routes = require("./routes");
 
 // Initializations:
-const app = express();
+var app = (0, _express["default"])(); // Middlewares
 
-// Middlewares
-setupMiddlewares(app);
+(0, _middlewares.setupMiddlewares)(app); // Routes
 
-// Routes
-app.use('/auth', authRoutes);
-app.use('/users', usersRoutes);
-app.use('/projects', projectsRoutes);
-app.use('/tasks', tasksRoutes);
-
-app.use(notFoundMiddleware);
-
-export default app;
+app.use('/auth', _routes.authRoutes);
+app.use('/users', _routes.usersRoutes);
+app.use('/projects', _routes.projectsRoutes);
+app.use('/tasks', _routes.tasksRoutes);
+app.use(_middlewares.notFoundMiddleware);
+var _default = app;
+exports["default"] = _default;

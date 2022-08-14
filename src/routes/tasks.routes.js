@@ -1,34 +1,20 @@
 'use strict';
 
-import { Router } from 'express';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
 
-import {
-  createTaskRules,
-  protectWithJwt,
-  taskIdRules,
-  toggleStateRules,
-  updateTaskRules,
-} from '../middlewares';
-import {
-  createTask,
-  deleteTask,
-  getTask,
-  toggleState,
-  updateTask,
-} from '../controllers';
+var _express = require("express");
 
-const router = Router();
+var _middlewares = require("../middlewares");
 
-router.use(protectWithJwt);
+var _controllers = require("../controllers");
 
-router.post('/', createTaskRules(), createTask);
-
-router
-  .route('/:id')
-  .get(taskIdRules(), getTask)
-  .put(updateTaskRules(), updateTask)
-  .delete(taskIdRules(), deleteTask);
-
-router.patch('/state/:id', toggleStateRules(), toggleState);
-
-export default router;
+var router = (0, _express.Router)();
+router.use(_middlewares.protectWithJwt);
+router.post('/', (0, _middlewares.createTaskRules)(), _controllers.createTask);
+router.route('/:id').get((0, _middlewares.taskIdRules)(), _controllers.getTask).put((0, _middlewares.updateTaskRules)(), _controllers.updateTask)["delete"]((0, _middlewares.taskIdRules)(), _controllers.deleteTask);
+router.patch('/state/:id', (0, _middlewares.toggleStateRules)(), _controllers.toggleState);
+var _default = router;
+exports["default"] = _default;

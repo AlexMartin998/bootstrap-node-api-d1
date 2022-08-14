@@ -1,20 +1,32 @@
 'use strict';
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.httpServer = void 0;
+
+var _http = require("http");
+
+var _socket = require("socket.io");
+
+var _app = _interopRequireDefault(require("./app"));
+
+var _sockets = _interopRequireDefault(require("./sockets/sockets"));
+
+var _config = require("./config");
+
 console.clear();
-
-import { createServer } from 'http';
-import { Server as WebsocketServer } from 'socket.io';
-
-import app from './app';
-import Sockets from './sockets/sockets';
-import { FRONTEND_URL, PORT } from './config';
-
-const server = createServer(app);
-export const httpServer = server.listen(PORT, () => {
-  console.log('Server is running on port', PORT);
+var server = (0, _http.createServer)(_app["default"]);
+var httpServer = server.listen(_config.PORT, function () {
+  console.log('Server is running on port', _config.PORT);
 });
-
-const io = new WebsocketServer(httpServer, {
+exports.httpServer = httpServer;
+var io = new _socket.Server(httpServer, {
   pingTimeout: 60000,
-  cors: { origin: FRONTEND_URL },
+  cors: {
+    origin: _config.FRONTEND_URL
+  }
 });
-Sockets(io);
+(0, _sockets["default"])(io);

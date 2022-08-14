@@ -1,8 +1,22 @@
 'use strict';
 
-import jwt from 'jsonwebtoken';
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-import { SECRETORKEY_JWT } from '../config';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.genJWT = void 0;
 
-export const genJWT = id =>
-  jwt.sign({ id }, SECRETORKEY_JWT, { expiresIn: '24h' });
+var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
+
+var _config = require("../config");
+
+var genJWT = function genJWT(id) {
+  return _jsonwebtoken["default"].sign({
+    id: id
+  }, _config.SECRETORKEY_JWT, {
+    expiresIn: '24h'
+  });
+};
+
+exports.genJWT = genJWT;

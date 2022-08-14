@@ -1,14 +1,26 @@
 'use strict';
 
-import { config } from 'dotenv';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.SECRETORKEY_JWT = exports.PORT = exports.MONGODB_URI = exports.FRONTEND_URL = exports.EMAIL_USER = exports.EMAIL_PORT = exports.EMAIL_PASS = exports.EMAIL_HOST = void 0;
 
-if (process.env.NODE_ENV !== 'producction') config();
+var _dotenv = require("dotenv");
 
-export const PORT = process.env.PORT;
-export const MONGODB_URI = process.env.MONGODB_URI;
-export const EMAIL_USER = process.env.EMAIL_USER;
-export const EMAIL_PASS = process.env.EMAIL_PASS;
-export const EMAIL_HOST = process.env.EMAIL_HOST;
-export const EMAIL_PORT = process.env.EMAIL_PORT;
-export const FRONTEND_URL = process.env.FRONTEND_URL;
-export const SECRETORKEY_JWT = process.env.SECRETORKEY_JWT;
+if (process.env.NODE_ENV !== 'producction') (0, _dotenv.config)();
+var PORT = process.env.PORT;
+exports.PORT = PORT;
+var MONGODB_URI = process.env.MONGODB_URI;
+exports.MONGODB_URI = MONGODB_URI;
+var EMAIL_USER = process.env.EMAIL_USER;
+exports.EMAIL_USER = EMAIL_USER;
+var EMAIL_PASS = process.env.EMAIL_PASS;
+exports.EMAIL_PASS = EMAIL_PASS;
+var EMAIL_HOST = process.env.EMAIL_HOST;
+exports.EMAIL_HOST = EMAIL_HOST;
+var EMAIL_PORT = process.env.EMAIL_PORT;
+exports.EMAIL_PORT = EMAIL_PORT;
+var FRONTEND_URL = process.env.FRONTEND_URL;
+exports.FRONTEND_URL = FRONTEND_URL;
+var SECRETORKEY_JWT = process.env.SECRETORKEY_JWT;
+exports.SECRETORKEY_JWT = SECRETORKEY_JWT;

@@ -1,37 +1,26 @@
 'use strict';
 
-import { Router } from 'express';
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-import {
-  checkToken,
-  genNewPasswordRules,
-  genRecoveryTokenRules,
-  getUserByEmailRules,
-  protectWithJwt,
-} from '../middlewares';
-import {
-  confirmUser,
-  genNewPassword,
-  genRecoveryToken,
-  getUserByEmail,
-  isAuthenticated,
-  validateToken,
-} from '../controllers';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
 
-const router = Router();
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
-router.post('/', [protectWithJwt, ...getUserByEmailRules()], getUserByEmail);
+var _express = require("express");
 
-router.get('/confirm/:token', checkToken, confirmUser);
+var _middlewares = require("../middlewares");
 
-router.post('/recovery-token', genRecoveryTokenRules(), genRecoveryToken);
+var _controllers = require("../controllers");
 
-router
-  .route('/password-recovery/:token')
-  .get(checkToken, validateToken)
-  .post(genNewPasswordRules(), genNewPassword);
+var router = (0, _express.Router)();
+router.post('/', [_middlewares.protectWithJwt].concat((0, _toConsumableArray2["default"])((0, _middlewares.getUserByEmailRules)())), _controllers.getUserByEmail);
+router.get('/confirm/:token', _middlewares.checkToken, _controllers.confirmUser);
+router.post('/recovery-token', (0, _middlewares.genRecoveryTokenRules)(), _controllers.genRecoveryToken);
+router.route('/password-recovery/:token').get(_middlewares.checkToken, _controllers.validateToken).post((0, _middlewares.genNewPasswordRules)(), _controllers.genNewPassword); // Private
 
-// Private
-router.get('/profile', protectWithJwt, isAuthenticated);
-
-export default router;
+router.get('/profile', _middlewares.protectWithJwt, _controllers.isAuthenticated);
+var _default = router;
+exports["default"] = _default;

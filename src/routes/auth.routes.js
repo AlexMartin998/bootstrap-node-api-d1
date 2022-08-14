@@ -1,14 +1,18 @@
 'use strict';
 
-import { Router } from 'express';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
 
-import { signIn, signUp } from '../controllers';
-import { loginRules, signUpRules } from '../middlewares';
+var _express = require("express");
 
-const router = Router();
+var _controllers = require("../controllers");
 
-router.post('/signup', signUpRules(), signUp);
+var _middlewares = require("../middlewares");
 
-router.post('/login', loginRules(), signIn);
-
-export default router;
+var router = (0, _express.Router)();
+router.post('/signup', (0, _middlewares.signUpRules)(), _controllers.signUp);
+router.post('/login', (0, _middlewares.loginRules)(), _controllers.signIn);
+var _default = router;
+exports["default"] = _default;

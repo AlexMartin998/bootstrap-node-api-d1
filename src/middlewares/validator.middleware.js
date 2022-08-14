@@ -1,130 +1,134 @@
 'use strict';
 
-import { body, validationResult, param } from 'express-validator';
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-import {
-  idExistInDB,
-  isAlreadyRegistered,
-  isEmailRegistered,
-  isSameUserOrPartner,
-  isSameUserOrPartnerTask,
-  isValidPriority,
-} from '../helpers';
-import { checkLoginCredentials, checkToken } from '.';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.validate = exports.updateTaskRules = exports.toggleStateRules = exports.taskIdRules = exports.signUpRules = exports.removePartnerRules = exports.projectIdRules = exports.loginRules = exports.getUserByEmailRules = exports.getProjectRules = exports.genRecoveryTokenRules = exports.genNewPasswordRules = exports.emailPassRules = exports.createTaskRules = exports.createProjectRules = void 0;
 
-export const validate = (req, res, next) => {
-  const errors = validationResult(req);
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+var _expressValidator = require("express-validator");
+
+var _helpers = require("../helpers");
+
+var _ = require(".");
+
+var validate = function validate(req, res, next) {
+  var errors = (0, _expressValidator.validationResult)(req);
   if (!errors.isEmpty()) return res.status(400).json(errors);
-
   return next();
+}; // Auth
+
+
+exports.validate = validate;
+
+var emailPassRules = function emailPassRules() {
+  return [(0, _expressValidator.body)('email', 'Invalid email!').isEmail(), (0, _expressValidator.body)('password', 'Password must be longer than 6 characters!').isLength({
+    min: 6
+  })];
 };
 
-// Auth
-export const emailPassRules = () => [
-  body('email', 'Invalid email!').isEmail(),
-  body('password', 'Password must be longer than 6 characters!').isLength({
-    min: 6,
-  }),
-];
+exports.emailPassRules = emailPassRules;
 
-export const signUpRules = () => [
-  body('name', 'Invalid name!').notEmpty(),
-  ...emailPassRules(),
-  validate,
+var signUpRules = function signUpRules() {
+  return [(0, _expressValidator.body)('name', 'Invalid name!').notEmpty()].concat((0, _toConsumableArray2["default"])(emailPassRules()), [validate, (0, _expressValidator.body)('email').custom(function (email) {
+    return (0, _helpers.isAlreadyRegistered)(email, 'user');
+  }), validate]);
+};
 
-  body('email').custom(email => isAlreadyRegistered(email, 'user')),
-  validate,
-];
+exports.signUpRules = signUpRules;
 
-export const loginRules = () => [
-  ...emailPassRules(),
-  validate,
-  checkLoginCredentials,
-];
+var loginRules = function loginRules() {
+  return [].concat((0, _toConsumableArray2["default"])(emailPassRules()), [validate, _.checkLoginCredentials]);
+}; // Users
 
-// Users
-export const genRecoveryTokenRules = () => [
-  body('email', 'Invalid email!').isEmail(),
-  validate,
-];
 
-export const genNewPasswordRules = () => [
-  body('password', 'Password is required!').notEmpty(),
-  validate,
-  checkToken,
-];
+exports.loginRules = loginRules;
 
-export const getUserByEmailRules = () => [
-  body('email', 'Invalid email!').isEmail(),
-  validate,
+var genRecoveryTokenRules = function genRecoveryTokenRules() {
+  return [(0, _expressValidator.body)('email', 'Invalid email!').isEmail(), validate];
+};
 
-  body('email').custom(isEmailRegistered),
-  validate,
-];
+exports.genRecoveryTokenRules = genRecoveryTokenRules;
 
-// Projects
-export const createProjectRules = () => [
-  body('name', 'Invalid name!').notEmpty(),
-  body('description', 'Invalid description!').notEmpty(),
-  body('client', 'Invalid client!').notEmpty(),
-  validate,
-];
+var genNewPasswordRules = function genNewPasswordRules() {
+  return [(0, _expressValidator.body)('password', 'Password is required!').notEmpty(), validate, _.checkToken];
+};
 
-export const getProjectRules = () => [
-  param('id', 'Invalid ID!').isMongoId(),
-  validate,
+exports.genNewPasswordRules = genNewPasswordRules;
 
-  param('id').custom((id, { req }) => isSameUserOrPartner(id, 'project', req)),
-  validate,
-];
+var getUserByEmailRules = function getUserByEmailRules() {
+  return [(0, _expressValidator.body)('email', 'Invalid email!').isEmail(), validate, (0, _expressValidator.body)('email').custom(_helpers.isEmailRegistered), validate];
+}; // Projects
 
-export const projectIdRules = () => [
-  param('id', 'Invalid ID!').isMongoId(),
-  validate,
 
-  param('id').custom((id, { req }) => idExistInDB(id, 'project', req)),
-  validate,
-];
+exports.getUserByEmailRules = getUserByEmailRules;
 
-export const removePartnerRules = () => [
-  param('id', 'Invalid ID!').isMongoId(),
-  body('partnerId', 'Invalid ID!').isMongoId(),
-  validate,
+var createProjectRules = function createProjectRules() {
+  return [(0, _expressValidator.body)('name', 'Invalid name!').notEmpty(), (0, _expressValidator.body)('description', 'Invalid description!').notEmpty(), (0, _expressValidator.body)('client', 'Invalid client!').notEmpty(), validate];
+};
 
-  param('id').custom((id, { req }) => idExistInDB(id, 'project', req)),
-  validate,
-];
+exports.createProjectRules = createProjectRules;
 
-// Tasks
-export const createTaskRules = () => [
-  body('name', 'Invalid name!').notEmpty(),
-  body('description', 'Invalid description!').notEmpty(),
-  body('project', 'Invalid project!').isMongoId(),
-  body('priority').custom(isValidPriority),
-  validate,
+var getProjectRules = function getProjectRules() {
+  return [(0, _expressValidator.param)('id', 'Invalid ID!').isMongoId(), validate, (0, _expressValidator.param)('id').custom(function (id, _ref) {
+    var req = _ref.req;
+    return (0, _helpers.isSameUserOrPartner)(id, 'project', req);
+  }), validate];
+};
 
-  body('project').custom((id, { req }) => idExistInDB(id, 'project', req)),
-  validate,
-];
+exports.getProjectRules = getProjectRules;
 
-export const taskIdRules = () => [
-  param('id', 'Invalid ID!').isMongoId(),
-  validate,
+var projectIdRules = function projectIdRules() {
+  return [(0, _expressValidator.param)('id', 'Invalid ID!').isMongoId(), validate, (0, _expressValidator.param)('id').custom(function (id, _ref2) {
+    var req = _ref2.req;
+    return (0, _helpers.idExistInDB)(id, 'project', req);
+  }), validate];
+};
 
-  param('id').custom((id, { req }) => idExistInDB(id, 'task', req)),
-  validate,
-];
+exports.projectIdRules = projectIdRules;
 
-export const updateTaskRules = () => [
-  body('priority').custom(isValidPriority),
-  validate,
-  ...taskIdRules(),
-];
+var removePartnerRules = function removePartnerRules() {
+  return [(0, _expressValidator.param)('id', 'Invalid ID!').isMongoId(), (0, _expressValidator.body)('partnerId', 'Invalid ID!').isMongoId(), validate, (0, _expressValidator.param)('id').custom(function (id, _ref3) {
+    var req = _ref3.req;
+    return (0, _helpers.idExistInDB)(id, 'project', req);
+  }), validate];
+}; // Tasks
 
-export const toggleStateRules = () => [
-  param('id', 'Invalid ID!').isMongoId(),
-  validate,
 
-  param('id').custom((id, { req }) => isSameUserOrPartnerTask(id, 'task', req)),
-  validate,
-];
+exports.removePartnerRules = removePartnerRules;
+
+var createTaskRules = function createTaskRules() {
+  return [(0, _expressValidator.body)('name', 'Invalid name!').notEmpty(), (0, _expressValidator.body)('description', 'Invalid description!').notEmpty(), (0, _expressValidator.body)('project', 'Invalid project!').isMongoId(), (0, _expressValidator.body)('priority').custom(_helpers.isValidPriority), validate, (0, _expressValidator.body)('project').custom(function (id, _ref4) {
+    var req = _ref4.req;
+    return (0, _helpers.idExistInDB)(id, 'project', req);
+  }), validate];
+};
+
+exports.createTaskRules = createTaskRules;
+
+var taskIdRules = function taskIdRules() {
+  return [(0, _expressValidator.param)('id', 'Invalid ID!').isMongoId(), validate, (0, _expressValidator.param)('id').custom(function (id, _ref5) {
+    var req = _ref5.req;
+    return (0, _helpers.idExistInDB)(id, 'task', req);
+  }), validate];
+};
+
+exports.taskIdRules = taskIdRules;
+
+var updateTaskRules = function updateTaskRules() {
+  return [(0, _expressValidator.body)('priority').custom(_helpers.isValidPriority), validate].concat((0, _toConsumableArray2["default"])(taskIdRules()));
+};
+
+exports.updateTaskRules = updateTaskRules;
+
+var toggleStateRules = function toggleStateRules() {
+  return [(0, _expressValidator.param)('id', 'Invalid ID!').isMongoId(), validate, (0, _expressValidator.param)('id').custom(function (id, _ref6) {
+    var req = _ref6.req;
+    return (0, _helpers.isSameUserOrPartnerTask)(id, 'task', req);
+  }), validate];
+};
+
+exports.toggleStateRules = toggleStateRules;

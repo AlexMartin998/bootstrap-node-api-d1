@@ -1,40 +1,21 @@
 'use strict';
 
-import { Router } from 'express';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
 
-import {
-  createProjectRules,
-  getProjectRules,
-  projectIdRules,
-  protectWithJwt,
-  removePartnerRules,
-} from '../middlewares';
-import {
-  addCollaborator,
-  createProject,
-  deleteProject,
-  getProject,
-  getProjects,
-  removeCollaborator,
-  updateProject,
-} from '../controllers';
+var _express = require("express");
 
-const router = Router();
+var _middlewares = require("../middlewares");
 
-// All routes will be protected
-router.use(protectWithJwt);
+var _controllers = require("../controllers");
 
-router.route('/').post(createProjectRules(), createProject).get(getProjects);
+var router = (0, _express.Router)(); // All routes will be protected
 
-router
-  .route('/:id')
-  .get(getProjectRules(), getProject)
-  .put(projectIdRules(), updateProject)
-  .delete(projectIdRules(), deleteProject);
-
-router
-  .route('/collaborator/:id')
-  .post(projectIdRules(), addCollaborator)
-  .put(removePartnerRules(), removeCollaborator);
-
-export default router;
+router.use(_middlewares.protectWithJwt);
+router.route('/').post((0, _middlewares.createProjectRules)(), _controllers.createProject).get(_controllers.getProjects);
+router.route('/:id').get((0, _middlewares.getProjectRules)(), _controllers.getProject).put((0, _middlewares.projectIdRules)(), _controllers.updateProject)["delete"]((0, _middlewares.projectIdRules)(), _controllers.deleteProject);
+router.route('/collaborator/:id').post((0, _middlewares.projectIdRules)(), _controllers.addCollaborator).put((0, _middlewares.removePartnerRules)(), _controllers.removeCollaborator);
+var _default = router;
+exports["default"] = _default;
